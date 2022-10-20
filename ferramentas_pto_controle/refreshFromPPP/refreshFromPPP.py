@@ -29,12 +29,13 @@ __revision__ = '$Format:%H$'
 
 from qgis.core import (QgsProcessing,
                        QgsProcessingAlgorithm,
+                       QgsProcessingParameterEnum,
                        QgsProcessingParameterFile,
                        QgsProcessingParameterString,
                        QgsProcessingParameterNumber)
 from qgis.PyQt.QtCore import QCoreApplication
 from .handleRefreshFromPPP import HandleRefreshFromPPP
-
+from .handleRefreshFromCSV import HandleRefreshFromCSV
 
 class RefreshFromPPP(QgsProcessingAlgorithm):
     """
@@ -51,7 +52,9 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
     """
 
     OUTPUT = 'OUTPUT'
+    METHOD = 'METHOD'
     FOLDER = 'FOLDER'
+    CSVFILE = 'CSVFILE'
     SERVERIP = 'SERVERIP'
     PORT = 'PORT'
     BDNAME = 'BDNAME'
@@ -64,24 +67,45 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
         with some other properties.
         """
         self.addParameter(
+            QgsProcessingParameterEnum(
+                self.METHOD,
+                self.tr('Selecione o método (PPP ou RTE)'),
+                options=['PPP', 'RTE']
+            )
+        )
+        
+        self.addParameter(
             QgsProcessingParameterFile(
                 self.FOLDER,
-                self.tr('Selecionar a pasta'),
-                behavior=QgsProcessingParameterFile.Folder
+                self.tr('Selecionar a pasta caso tenha escolhido PPP (caso tenha escolhido RTE não selecionar nada)'),
+                behavior=QgsProcessingParameterFile.Folder,
+                optional=True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterFile(
+                self.CSVFILE,
+                self.tr('Selecionar o arquivo CSV caso tenha escolhido RTE (caso tenha escolhido PPP não selecionar nada)'),
+                behavior=QgsProcessingParameterFile.File,
+                extension='csv',
+                optional=True
             )
         )
 
         self.addParameter(
             QgsProcessingParameterString(
                 self.SERVERIP,
-                self.tr('Insira o IP do computador')
+                self.tr('Insira o IP do computador'),
+                optional=True
             )
         )
 
         self.addParameter(
             QgsProcessingParameterNumber(
                 self.PORT,
-                self.tr('Insira a porta')
+                self.tr('Insira a porta'),
+                optional=True
             )
         )
 
@@ -89,6 +113,7 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
             QgsProcessingParameterString(
                 self.BDNAME,
                 self.tr('Insira o nome do banco de dados'),
+                optional=True
             )
         )
 
@@ -96,12 +121,14 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
             QgsProcessingParameterString(
                 self.USER,
                 self.tr('Insira o usuário do PostgreSQL'),
+                optional=True
             )
         )
 
         password = QgsProcessingParameterString(
             self.PASSWORD,
             self.tr('Insira a senha do PostgreSQL'),
+            optional=True
         )
         password.setMetadata({
             'widget_wrapper':
@@ -113,15 +140,26 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
         """
         Here is where the processing itself takes place.
         """
-        folder = self.parameterAsFile(parameters, self.FOLDER, context)
+        method = self.parameterAsEnum(parameters, self.METHOD, context)
         server_ip = self.parameterAsString(parameters, self.SERVERIP, context)
         port = self.parameterAsInt(parameters, self.PORT, context)
         bdname = self.parameterAsString(parameters, self.BDNAME, context)
         user = self.parameterAsString(parameters, self.USER, context)
         password = self.parameterAsString(parameters, self.PASSWORD, context)
-        refresh = HandleRefreshFromPPP(folder, server_ip, port, bdname, user, password)
-        refresh.readPPP()
-        return {self.OUTPUT: ''}
+        if method == 0:
+            folder = self.parameterAsFile(parameters, self.FOLDER, context)
+            refreshPPP = HandleRefreshFromPPP(folder, server_ip, port, bdname, user, password)
+            refreshPPP.readPPP()
+            self.OUTPUT = 'PPP'
+            return {self.OUTPUT: ''}    
+        if method == 1:
+            csvfile = self.parameterAsFile(parameters, self.CSVFILE, context)
+            refreshCSV = HandleRefreshFromCSV(server_ip, port, bdname, user, password, csvfile)
+            refreshCSV.readCSV()
+            self.OUTPUT = 'RTE'
+            return {self.OUTPUT: ''}
+        
+        
 
     def name(self):
         """
