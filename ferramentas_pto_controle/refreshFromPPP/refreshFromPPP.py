@@ -29,6 +29,7 @@ __revision__ = '$Format:%H$'
 
 from qgis.core import (QgsProcessing,
                        QgsProcessingAlgorithm,
+                       QgsProcessingException,
                        QgsProcessingParameterEnum,
                        QgsProcessingParameterFile,
                        QgsProcessingParameterString,
@@ -144,9 +145,12 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
         password = self.parameterAsString(parameters, self.PASSWORD, context)
         if method == 0: # PPP
             folder = self.parameterAsFile(parameters, self.FOLDER, context)
-            refreshPPP = HandleRefreshFromPPP(folder, server_ip, port, bdname, user, password)
-            refreshPPP.readPPP()
-            self.OUTPUT = 'PPP'
+            if folder == '':
+                raise QgsProcessingException("Para o método PPP é necessário selecionar pasta")
+            else:
+                refreshPPP = HandleRefreshFromPPP(folder, server_ip, port, bdname, user, password)
+                refreshPPP.readPPP()
+                self.OUTPUT = 'PPP'
             return {self.OUTPUT: ''}    
         if method == 1: # RTE
             csvfile = self.parameterAsFile(parameters, self.CSVFILE, context)
