@@ -10,8 +10,7 @@ import psycopg2
 
 class HandleRefreshFromCSV():
 
-    def __init__(self, path, host, port, db_name, user, password, filecsv):
-        self.folder = Path(path)
+    def __init__(self, host, port, db_name, user, password, filecsv):
         self.filecsv = Path(filecsv)
         self.conn = psycopg2.connect("host='{0}' port='{1}' dbname='{2}' user='{3}' password='{4}'".format(
             host, port, db_name, user, password))
@@ -21,7 +20,7 @@ class HandleRefreshFromCSV():
             'FINAL': 4
         }
 
-    def readPPP(self):
+    def readCSV(self):
         with open(self.filecsv, newline = '') as csvfile:
             spamreader = csv.DictReader(csvfile, delimiter = ',')
             for row in spamreader:
@@ -72,4 +71,4 @@ class HandleRefreshFromCSV():
 
 if __name__ == "__main__":
     test = HandleRefreshFromCSV(*sys.argv[1:])
-    test.readPPP()
+    test.readCSV()

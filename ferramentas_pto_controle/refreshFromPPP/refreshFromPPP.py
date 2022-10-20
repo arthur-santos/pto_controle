@@ -97,7 +97,6 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
             QgsProcessingParameterString(
                 self.SERVERIP,
                 self.tr('Insira o IP do computador'),
-                optional=True
             )
         )
 
@@ -105,7 +104,7 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
             QgsProcessingParameterNumber(
                 self.PORT,
                 self.tr('Insira a porta'),
-                optional=True
+                defaultValue=5432,
             )
         )
 
@@ -113,7 +112,6 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
             QgsProcessingParameterString(
                 self.BDNAME,
                 self.tr('Insira o nome do banco de dados'),
-                optional=True
             )
         )
 
@@ -121,14 +119,12 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
             QgsProcessingParameterString(
                 self.USER,
                 self.tr('Insira o usuário do PostgreSQL'),
-                optional=True
             )
         )
 
         password = QgsProcessingParameterString(
             self.PASSWORD,
             self.tr('Insira a senha do PostgreSQL'),
-            optional=True
         )
         password.setMetadata({
             'widget_wrapper':
@@ -146,13 +142,13 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
         bdname = self.parameterAsString(parameters, self.BDNAME, context)
         user = self.parameterAsString(parameters, self.USER, context)
         password = self.parameterAsString(parameters, self.PASSWORD, context)
-        if method == 0:
+        if method == 0: # PPP
             folder = self.parameterAsFile(parameters, self.FOLDER, context)
             refreshPPP = HandleRefreshFromPPP(folder, server_ip, port, bdname, user, password)
             refreshPPP.readPPP()
             self.OUTPUT = 'PPP'
             return {self.OUTPUT: ''}    
-        if method == 1:
+        if method == 1: # RTE
             csvfile = self.parameterAsFile(parameters, self.CSVFILE, context)
             refreshCSV = HandleRefreshFromCSV(server_ip, port, bdname, user, password, csvfile)
             refreshCSV.readCSV()
