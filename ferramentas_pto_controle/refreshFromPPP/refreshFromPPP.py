@@ -162,6 +162,10 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
         Retruns a short helper string for the algorithm
         """
         return self.tr('''
+        ATENÇÃO: Essa rotina deve ser utilizada caso o usuário deseje atualizar o banco de dados com
+        informações do PPP. Caso deseje atualizar o banco de dados com informações do RTE deverá utilizar a 
+        rotina "7.B- Atualizar banco com dados do RTE"
+        
         Esta rotina atualiza o banco de dados com os dados do PPP. 
         Os parâmetros necessários para essa rotina são:
         - Pasta com a estrutura de pontos de controle (deve estar validada de pela ferramenta Data Validation)

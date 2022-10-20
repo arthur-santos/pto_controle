@@ -141,7 +141,7 @@ class RefreshFromCSV(QgsProcessingAlgorithm):
         lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return '7.B- Atualizar banco com dados do PPP'
+        return '7.B- Atualizar banco com dados do RTE'
 
     def displayName(self):
         """
@@ -172,8 +172,13 @@ class RefreshFromCSV(QgsProcessingAlgorithm):
         Retruns a short helper string for the algorithm
         """
         return self.tr('''
+        ATENÇÃO: Essa rotina deve ser utilizada caso o usuário deseje atualizar o banco de dados com
+        o CSV do RTE. Caso deseje atualizar o banco de dados com informações do PPP deverá utilizar a 
+        rotina "7.A- Atualizar banco com dados do PPP"
+        
         Esta rotina atualiza o banco de dados com os dados do PPP. 
         Os parâmetros necessários para essa rotina são:
+        - Arquivo CSV com a informações do RTE
         - Pasta com a estrutura de pontos de controle (deve estar validada de pela ferramenta Data Validation)
         - Parâmetros de conexão do banco:
             -- IP da máquina (se trabalhando localmente utilizar localhost)
