@@ -131,7 +131,7 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
         lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return '7- Atualizar banco com dados do PPP'
+        return '7.A- Atualizar banco com dados do PPP'
 
     def displayName(self):
         """
