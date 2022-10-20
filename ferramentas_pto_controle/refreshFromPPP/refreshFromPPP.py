@@ -165,7 +165,7 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
         lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return '7.A- Atualizar banco com dados do PPP'
+        return '7- Atualizar banco com dados do PPP'
 
     def displayName(self):
         """
@@ -196,11 +196,11 @@ class RefreshFromPPP(QgsProcessingAlgorithm):
         Retruns a short helper string for the algorithm
         """
         return self.tr('''
-        ATENÇÃO: Essa rotina deve ser utilizada caso o usuário deseje atualizar o banco de dados com informações do PPP. Caso deseje atualizar o banco de dados com informações do RTE deverá utilizar a  rotina "7.B- Atualizar banco com dados do RTE"
-        
-        Esta rotina atualiza o banco de dados com os dados do PPP. 
+        Esta rotina atualiza o banco de dados com os dados do PPP ou RTE. 
         Os parâmetros necessários para essa rotina são:
-        - Pasta com a estrutura de pontos de controle (deve estar validada de pela ferramenta Data Validation)
+        - Método usado para obter as informações (PPP ou RTE)
+        - Pasta com a estrutura de pontos de controle (caso seja usado o método PPP)
+        - Arquivo .csv (caso seja usado o método RTE)
         - Parâmetros de conexão do banco:
             -- IP da máquina (se trabalhando localmente utilizar localhost)
             -- Porta (geralmente 5432 para PostgreSQL)
