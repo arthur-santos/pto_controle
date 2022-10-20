@@ -172,9 +172,7 @@ class RefreshFromCSV(QgsProcessingAlgorithm):
         Retruns a short helper string for the algorithm
         """
         return self.tr('''
-        ATENÇÃO: Essa rotina deve ser utilizada caso o usuário deseje atualizar o banco de dados com
-        o CSV do RTE. Caso deseje atualizar o banco de dados com informações do PPP deverá utilizar a 
-        rotina "7.A- Atualizar banco com dados do PPP"
+        ATENÇÃO: Essa rotina deve ser utilizada caso o usuário deseje atualizar o banco de dados com o CSV do RTE. Caso deseje atualizar o banco de dados com informações do PPP deverá utilizar a rotina "7.A- Atualizar banco com dados do PPP"
         
         Esta rotina atualiza o banco de dados com os dados do PPP. 
         Os parâmetros necessários para essa rotina são:
